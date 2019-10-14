@@ -42,7 +42,7 @@ oc patch clusterrole notebooks-controller --type='json' -p='[{"op": "add", "path
 echo "==> Expose Ambassador"
 oc expose service ambassador
 
-echo "==> Update Argo"
+echo "==> Update Argo and switch executor to k8sapi"
 # 'argoproj/workflow-controller:v2.3.0'
 oc patch deployment workflow-controller --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "argoproj/workflow-controller:v2.3.0"}]'
 cat << EOF | oc apply -f -
