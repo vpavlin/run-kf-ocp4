@@ -10,7 +10,7 @@ patches:
   patch: |-
     - op: replace
       path: /metadata/namespace
-      value: {{ namespace }}
+      value: "{{ namespace }}"
 - target:
     kind: "Deployment"
     name: "tf-job-operator"
@@ -28,7 +28,9 @@ patches:
 patchesStrategicMerge:
 - patches/openshift/cluster-role-del.yaml
 - patches/openshift/cluster-rolebinding-del.yaml
-- overlays/openshift/cluster-role.yaml
+- patches/openshift/deployment-env.yaml
+- patches/openshift/cluster-role.yaml
+
 resources:
 - overlays/openshift/role.yaml
 - overlays/openshift/rolebinding.yaml

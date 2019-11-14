@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tf-job-operator
+spec:
+  template:
+    spec:
+      containers:
+      - name: tf-job-operator
+        env:
+        - name: KUBEFLOW_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
