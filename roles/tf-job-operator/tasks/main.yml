@@ -1,0 +1,10 @@
+
+- name: Template namespace to kustomization.yaml
+  template:
+    src: kf-on-openshift/kustomization.yaml.j2
+    dest: kf-on-openshift/kustomization.yaml
+- name: Kustomize TF Job Operator
+  shell: "{{ bin }}/kustomize build kf-on-openshift > {{ manifests }}/tf-job-operator.yaml"
+  register: kustomize_output
+- debug:
+    msg: "{{ kustomize_output }}"

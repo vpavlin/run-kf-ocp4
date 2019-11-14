@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: "tf-job-operator"
+$patch: delete
+#---
+#apiVersion: rbac.authorization.k8s.io/v1beta1
+#kind: ClusterRole
+#metadata:
+#  name: "tf-job-dashboard"
+#$patch: delete

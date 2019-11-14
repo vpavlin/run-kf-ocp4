@@ -1,0 +1,59 @@
+- name: Create ./{{ bin }}/ directory
+  file:
+    path: "./{{ bin }}/"
+    state: directory
+- name: Create ./{{ manifests }}/ directory
+  file:
+    path: "./{{ manifests }}/"
+    state: directory
+
+- name: Check kfctl exists
+  stat:
+    path: "{{ bin }}/kfctl"
+  register: kfctl_bin
+- debug:
+    msg: "{{ kfctl_bin.stat.exists }}"
+- name: Get kfctl
+  when: not kfctl_bin.stat.exists
+  shell: |
+    curl -L -o {{ bin }}/kfctl.tar.gz https://github.com/kubeflow/kubeflow/releases/download/{{ kfctl_version }}/kfctl_{{ kfctl_version }}_linux.tar.gz  &&\
+    tar -xzf {{ bin }}/kfctl.tar.gz -C {{ bin }}
+- name: Check kfctl version
+  shell: "{{ bin }}/kfctl version | grep {{ kfctl_version }}"
+  register: kfctl_version_output
+
+- name: Check kustomize exists
+  stat:
+    path: "{{ bin }}/kustomize"
+  register: kustomize_bin
+- debug:
+    msg: "{{ kustomize_bin.stat.exists }}"
+- name: Get kustomize
+  when: not kustomize_bin.stat.exists
+  shell: |
+    curl -L -o {{ bin }}/kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F{{ kustomize_version }}/kustomize_kustomize.{{ kustomize_version }}_linux_amd64  &&\
+    chmod +x {{ bin }}/kustomize
+- name: Check kustomize version
+  shell: "{{ bin }}/kustomize version | grep {{ kustomize_version }}"
+  register: kustomize_version_output
+
+- name: Check is Kubeflow ({{ kfapp }}) has been initialized
+  stat:
+    path: "{{ kfapp }}"
+  register: kfapp_dir
+- name: Prepare Kubeflow manifests
+  when: not kfapp_dir.stat.exists
+  shell: "{{ bin }}/kfctl init {{ kfapp }}"
+  ignore_errors: yes
+- name: Generate Kubeflow manifests
+  shell:
+    cmd: "../{{ bin }}/kfctl generate all -V"
+    chdir: "{{ kfapp }}"
+- name: Check Kustomize subdirectory exists
+  stat:
+    path: "{{ kfapp }}/kustomize"
+  register: kustomize_dir
+
+- name: Fail if Kustomize subdirectory does not exists
+  fail: msg="Directory {{ kfapp }}/kustomize does not exist" 
+  when: not kustomize_dir.stat.exists or not kustomize_dir.stat.isdir

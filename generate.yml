@@ -1,0 +1,6 @@
+- name: Kubeflow on OpenShift
+  hosts: localhost
+  roles:
+  - kubeflow-prep
+  - tf-job-operator
+    

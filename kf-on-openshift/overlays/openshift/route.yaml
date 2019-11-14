@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: tf-job-dashboard
+spec:
+  to:
+    kind: Service
+    name: tf-job-dashboard
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None

@@ -1,0 +1,5 @@
+bin: bin
+manifests: manifests
+kfapp: kubeflow
+
+namespace: odh

@@ -1,0 +1,19 @@
+- name: Clean up Kubeflow on OpenShift
+  hosts: localhost
+  tasks:
+  - name: "Remove {{ kfapp }} dir"
+    file:
+      state: absent
+      path: "{{ kfapp }}/"
+  - name: "Remove ./{{ bin }}/ dir"
+    file:
+      state: absent
+      path: "./{{ bin }}/"
+  - name: "Remove ./{{ manifests }}/ dir"
+    file:
+      state: absent
+      path: "./{{ manifests }}/"
+  - name: "Remove processed kustomization.yaml file"
+    file:
+      state: absent
+      path: "./kf-on-openshift/kustomization.yaml"
